@@ -369,7 +369,6 @@ class EmbeddedSimEnvironment(object):
         ax6.grid()
 
         fig1.tight_layout()
-        fig1.savefig('/home/roque/cat_results.eps', format='eps')
 
     def prepare_animated_plots(self):
         """
