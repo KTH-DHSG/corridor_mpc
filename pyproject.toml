@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "corridor_mpc"
+version = "0.1.0"
+description = ""
+authors = ["Pedro Roque <padr@kth.se>"]
+readme = "README.md"
+packages = [{include = "corridor_mpc", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "==3.8.10"
+casadi = "3.5.5"
+numpy = "^1.24.1"
+scipy = "^1.10.0"
+matplotlib = "^3.6.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
