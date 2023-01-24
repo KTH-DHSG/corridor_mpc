@@ -10,7 +10,7 @@ of staying within the corridor and practical stability in the
 sense of converging to the reference trajectory
 
 ## Running the demo
-To install the package, make sure to have installed [Python Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) in your system, and **Python 3.8 or 3.9**. Then, run the following commands:
+To install the package, make sure to have installed [Python Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer),  **Python 3.8 or 3.9** for CasADi compatibility, and `python3-tk` (for your Python version) to display plots. Then, run the following commands:
 
 1. Clone the repository:
 ```
