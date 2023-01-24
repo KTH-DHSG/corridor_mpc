@@ -7,6 +7,10 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 from matplotlib import rc
+try:
+    mpl.use('TkAgg')
+except ImportError:
+    print("Running with no-GUI backend.")
 
 
 class EmbeddedSimEnvironment(object):

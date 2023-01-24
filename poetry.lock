@@ -205,8 +205,8 @@ python-versions = ">=3.7"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "==3.8.10"
-content-hash = "f55df70e6f3b379c86574443a650f87cbcaff8b85edf2934c3769c136a624d27"
+python-versions = "^3.8,<3.10"
+content-hash = "e21cd6a3bbc78f5c937537dfe89a3fdd20b9ac250404b47cefb1f38a19df6d7b"
 
 [metadata.files]
 casadi = [
