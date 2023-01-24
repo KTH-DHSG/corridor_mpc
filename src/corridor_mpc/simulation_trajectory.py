@@ -9,8 +9,10 @@ import matplotlib.pyplot as plt
 from matplotlib import rc
 try:
     mpl.use('TkAgg')
+    DISPLAY_AVAILABLE = True
 except ImportError:
-    print("Running with no-GUI backend.")
+    DISPLAY_AVAILABLE = False
+    print("\033[93mWarning:\033[0m Running with no-GUI backend. Please install python3-tk for your Python version to display plots.")
 
 
 class EmbeddedSimEnvironment(object):
@@ -124,10 +126,10 @@ class EmbeddedSimEnvironment(object):
             y_vec = np.append(y_vec, np.array(x_next), axis=1)
             u_vec = np.append(u_vec, np.array(u), axis=1)
 
-        if self.collect is True:
+        if self.collect is True and DISPLAY_AVAILABLE:
             self.collect_plots(data)
 
-        if self.animate is True or self.collect is True:
+        if self.animate is True or self.collect is True and DISPLAY_AVAILABLE:
             plt.show(block=True)
 
         return t, y_vec, u_vec, np.average(slv_time)
