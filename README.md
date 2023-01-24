@@ -18,7 +18,7 @@ git clone git@github.com:KTH-DHSG/corridor_mpc.git
 ```
 
 _Optional_: Configure `poetry` to create a local virtual environment:
-```shell
+```
 poetry config virtualenvs.in-project true
 ```
 
