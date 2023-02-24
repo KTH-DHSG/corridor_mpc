@@ -30,8 +30,7 @@ xr0 = np.zeros((6, 1))
 abee.set_trajectory(length=SIM_TIME, start=xr0)
 sim_env_full = EmbeddedSimEnvironment(model=abee,
                                       dynamics=abee.model,
-                                      ctl_class=ctl,
-                                      controller=ctl.mpc_controller,
+                                      cmpc=ctl,
                                       noise={"pos": 0.1, "att": 0.1},
                                       time=SIM_TIME, collect=True,
                                       animate=False)

@@ -26,7 +26,9 @@ poetry config virtualenvs.in-project true
 ```
 cd corridor_mpc
 poetry install
+poetry run python scripts/install_dependencies.py
 ```
+**NOTE**: the `script/install_dependencies` will be successful in Ubuntu systems versions 18.04 or higher. For a different OS or version, please install the dependencies manually.
 
 3. Run the demo script:
 ```

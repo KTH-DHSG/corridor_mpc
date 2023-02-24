@@ -367,9 +367,9 @@ class CorridorMPC(object):
 
         return optvar['x'], optvar['u']
 
-    def mpc_controller(self, x0, t0):
+    def solve(self, x0, t0):
         """
-        MPC interface.
+        CMPC interface.
 
         :param x0: initial state
         :type x0: ca.DM

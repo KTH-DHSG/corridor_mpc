@@ -16,7 +16,7 @@ except ImportError:
 
 
 class EmbeddedSimEnvironment(object):
-    def __init__(self, model, dynamics, ctl_class, controller,
+    def __init__(self, model, dynamics, cmpc, 
                  noise=None, time=100.0, collect=True, animate=False):
         """
         Embedded simulation environment. Simulates the syste given
@@ -41,8 +41,7 @@ class EmbeddedSimEnvironment(object):
         self.Nx = model.n
         self.Nu = model.m
         self.dynamics = dynamics
-        self.ctl_class = ctl_class
-        self.controller = controller
+        self.corridor_mpc = cmpc
         self.total_sim_time = time  # seconds
         self.dt = self.model.dt
         self.noise = noise
@@ -76,11 +75,11 @@ class EmbeddedSimEnvironment(object):
 
         for i in range(self.sim_loop_length):
             # Print iteration info:
-            print("Iteration: ", i, " / ", self.sim_loop_length, "    t: ", round(i * self.dt, 2))
+            print("Simulator iteration: ", i, " / ", self.sim_loop_length, "    Simulation time: ", round(i * self.dt, 2))
             x = np.array([y_vec[:, -1]]).T
 
             # Get control input and obtain next state
-            u, ref, pred_x, pred_ref = self.controller(x, i * self.dt)
+            u, ref, pred_x, pred_ref = self.corridor_mpc.solve(x, i * self.dt)
 
             # Convert data to numpy array and collect barrier values
             u = np.asarray(u).reshape(6, 1)
@@ -95,7 +94,7 @@ class EmbeddedSimEnvironment(object):
 
             # Prepare data for logging
             slv_time = np.append(slv_time,
-                                 self.ctl_class.get_last_solve_time())
+                                 self.corridor_mpc.get_last_solve_time())
             ref_vec = np.append(ref_vec, np.array([ref]).T, axis=1)
             h1_h2_vec = np.append(h1_h2_vec,
                                   np.array([[hp_c, hq_c]]).reshape(2, 1),
