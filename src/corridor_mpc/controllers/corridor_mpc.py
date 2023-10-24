@@ -90,14 +90,14 @@ class CorridorMPC(object):
 
         # Starting state parameters - add slack here
         x0 = ca.MX.sym('x0', self.Nx)
-        x_ref = ca.MX.sym('x_ref', self.Nx * (self.Nt + 1),)
-        u_ref = ca.MX.sym('u_ref', self.Nu * self.Nt,)
+        x_ref = ca.MX.sym('x_ref', self.Nx * (self.Nt),)
+        u_ref = ca.MX.sym('u_ref', self.Nu * (self.Nt - 1),)
         param_s = ca.vertcat(x0, x_ref, u_ref)
 
         # Create optimization variables
         opt_var = ctools.struct_symMX([(
-                                      ctools.entry('u', shape=(self.Nu,), repeat=self.Nt),
-                                      ctools.entry('x', shape=(self.Nx,), repeat=self.Nt + 1),
+                                      ctools.entry('u', shape=(self.Nu,), repeat=self.Nt - 1),
+                                      ctools.entry('x', shape=(self.Nx,), repeat=self.Nt),
                                       )])
         self.opt_var = opt_var
         self.num_var = opt_var.size
@@ -115,7 +115,7 @@ class CorridorMPC(object):
         con_eq.append(opt_var['x', 0] - x0)
 
         # Generate MPC Problem
-        for t in range(self.Nt):
+        for t in range(self.Nt - 1):
             # Get variables
             x_t = opt_var['x', t]
             x_r = x_ref[(t * self.Nx):(t * self.Nx + self.Nx)]
@@ -162,8 +162,9 @@ class CorridorMPC(object):
             obj += self.running_cost(x_t, x_r, self.Q, u_t - u_r, self.R)
 
         # Terminal Cost
-        obj += self.terminal_cost(opt_var['x', self.Nt],
-                                  x_ref[self.Nt * self.Nx:], self.P)
+        t = self.Nt - 1
+        x_r = x_ref[(t * self.Nx):(t * self.Nx + self.Nx)]
+        obj += self.terminal_cost(opt_var['x', self.Nt - 1], x_r, self.P)
 
         # Terminal contraint
         if hasattr(self, 'tc_lb') and hasattr(self, 'tc_ub'):
@@ -379,11 +380,11 @@ class CorridorMPC(object):
         :rtype: ca.DM
         """
         # Generate trajectory from t0 and x0
-        x_sp_vec = self.model.get_trajectory(t0, self.Nt + 1)
-        u_sp_vec = self.model.get_constant_u_sp(self.Nt)
+        x_sp_vec = self.model.get_trajectory(t0, self.Nt)
+        u_sp_vec = self.model.get_constant_u_sp(self.Nt - 1)
         ref = x_sp_vec[:, 0]
-        x_sp = x_sp_vec.reshape(self.Nx * (self.Nt + 1), order='F')
-        u_sp = u_sp_vec.reshape(self.Nu * self.Nt, order='F')
+        x_sp = x_sp_vec.reshape(self.Nx * (self.Nt), order='F')
+        u_sp = u_sp_vec.reshape(self.Nu * (self.Nt - 1), order='F')
         self.set_reference(x_sp, u_sp)
 
         x_pred, u_pred = self.solve_mpc(x0)
